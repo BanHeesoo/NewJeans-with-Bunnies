@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>New Jeans</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+        #video-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .video-item {
+            width: 300px;
+            margin: 10px;
+        }
+        iframe {
+            width: 100%;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>New Jeans</h1>
+    <img src="new_jeans_group.jpg" alt="New Jeans Girl Group" style="display: block; margin: 0 auto; width: 300px;">
+
+    <div id="video-container">
+        <!-- The latest YouTube videos are added here. -->
+    </div>
+
+    <script>
+        // YouTube API Key - Substitute your own YouTube Data API v3 key.
+        const apiKey = "AIzaSyAIbv-noaALqQ8w-ix6kHVNzna5qS3s3PM";
+        // New Jeans' YouTube channel ID - replace with your actual channel ID.
+        const channelId = "UCMki_UkHb4qSc0qyEcOHHJw";
+        // number of videos to display
+        const maxVideos = 20; // Change this to 20 to display 20 videos
+
+        // Function to get the latest video through the YouTube API
+        async function fetchLatestVideos() {
+            const apiUrl = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=${maxVideos}`;
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                const videoContainer = document.getElementById('video-container');
+                data.items.forEach(item => {
+                    const videoId = item.id.videoId;
+                    const videoTitle = item.snippet.title;
+                    const videoItem = document.createElement('div');
+                    videoItem.className = 'video-item';
+                    videoItem.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe><p>${videoTitle}</p>`;
+                    videoContainer.appendChild(videoItem);
+                });
+            } catch (error) {
+                console.error('Error importing video:', error);
+            }
+        }
+
+        // Call a function to fetch and display the latest video when the page loads
+        window.onload = fetchLatestVideos;
+    </script>
+</body>
+</html>
